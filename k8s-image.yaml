@@ -14,6 +14,8 @@
           - ca-certificates
           - curl
           - zsh
+          - wget
+          - parted
     - name: install k8s apt key
       apt_key:
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
