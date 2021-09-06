@@ -36,6 +36,13 @@
   "provisioners": [
     {
       "type": "shell",
+      "inline": [
+        "mv /etc/resolv.conf /etc/resolv.conf.bk",
+        "echo 'nameserver 8.8.8.8' > /etc/resolv.conf"
+      ]
+    },
+    {
+      "type": "shell",
       "script": "ansible-install.sh"
     },
     {
@@ -57,6 +64,12 @@
     {
       "type": "ansible-local",
       "playbook_file": "./user-setup.yaml"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "mv /etc/resolv.conf.bk /etc/resolv.conf"
+      ]
     }
   ]
 }
