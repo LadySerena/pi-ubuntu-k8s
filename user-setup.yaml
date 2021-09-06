@@ -1,0 +1,20 @@
+- name: setup my user
+  hosts: all
+  become: true
+  tasks:
+    - name: create katadmin group
+      group:
+        name: katadmin
+        state: present
+    - name: add my user
+      user:
+        name: kat
+        comment: serena's user on pi
+        append: yes
+        groups:
+          - katadmin
+    - name: drop ssh key
+      authorized_key:
+        user: kat
+        state: present
+        key: "{{ lookup('file', '/tmp/pi-image-key.pub') }}"

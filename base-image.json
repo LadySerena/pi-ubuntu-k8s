@@ -1,0 +1,60 @@
+{
+  "variables": {},
+  "builders": [{
+    "type": "arm",
+    "file_urls" : ["https://cdimage.ubuntu.com/releases/20.04.3/release/ubuntu-20.04.3-preinstalled-server-arm64+raspi.img.xz"],
+    "file_checksum_url": "http://cdimage.ubuntu.com/releases/20.04.3/release/SHA256SUMS",
+    "file_checksum_type": "sha256",
+    "file_unarchive_cmd": ["xz", "--decompress", "$ARCHIVE_PATH"],
+    "file_target_extension": "xz",
+    "image_build_method": "reuse",
+    "image_path": "ubuntu-20.04-k8s.img",
+    "image_size": "4G",
+    "image_type": "dos",
+    "image_partitions": [
+      {
+        "name": "boot",
+        "type": "c",
+        "start_sector": "2048",
+        "filesystem": "vfat",
+        "size": "256M",
+        "mountpoint": "/boot/firmware"
+      },
+      {
+        "name": "root",
+        "type": "83",
+        "start_sector": "526336",
+        "filesystem": "ext4",
+        "size": "3.7",
+        "mountpoint": "/"
+      }
+    ],
+    "image_chroot_env":["PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"],
+    "qemu_binary_source_path": "/usr/bin/qemu-arm-static",
+    "qemu_binary_destination_path": "/usr/bin/qemu-arm-static"
+  }],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "apt-get update -y",
+        "apt-get upgrade -y",
+        "apt-get install -y parted python3.8-minimal ",
+        "pacman -S parted python wget curl --noconfirm --needed"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "./pi-image-key.pub",
+      "destination": "/tmp/pi-image-key.pub"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "./k8s-image.yaml"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "./user-setup.yaml"
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+steps:
+  - name: ubuntu:20.04
