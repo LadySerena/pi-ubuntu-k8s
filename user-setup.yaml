@@ -6,6 +6,13 @@
       group:
         name: katadmin
         state: present
+    - name: add katadmin to sudoers file
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^%katadmin ALL='
+        line: '%katadmin ALL=(ALL) NOPASSWD: ALL'
+        validate: /usr/sbin/visudo -cf %s
     - name: add my user
       user:
         name: kat
