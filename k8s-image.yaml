@@ -21,6 +21,10 @@
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
         state: present
     - name: install k8s apt repo
+      register: repo_add
+      until: repo_add is success
+      delay: 6
+      retries: 10
       apt_repository:
         repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
         update_cache: yes

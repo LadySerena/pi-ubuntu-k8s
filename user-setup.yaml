@@ -18,6 +18,7 @@
         name: kat
         comment: serena's user on pi
         append: yes
+        shell: /usr/bin/zsh
         groups:
           - katadmin
     - name: drop ssh key
