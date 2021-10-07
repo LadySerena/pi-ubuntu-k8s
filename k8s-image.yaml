@@ -10,15 +10,23 @@
       apt:
         pkg:
           - avahi-daemon
+          - libraspberrypi-bin
+          - rpi-eeprom
           - apt-transport-https
           - ca-certificates
           - curl
+          - lsb-release
           - zsh
           - wget
           - parted
+          - gnupg
     - name: install k8s apt key
       apt_key:
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+    - name: install docker apt key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
         state: present
     - name: install k8s apt repo
       register: repo_add
@@ -27,6 +35,14 @@
       retries: 10
       apt_repository:
         repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+        update_cache: yes
+    - name: install docker/containerd repo
+      register: containerd_repo_add
+      until: containerd_repo_add
+      delay: 6
+      retries: 10
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
         update_cache: yes
     - name: install k8s tools
       register: k8s_status
@@ -38,6 +54,7 @@
           - kubelet
           - kubeadm
           - kubectl
+          - containerd.io
     - name: hold kubelet package
       dpkg_selections:
         name: kubelet

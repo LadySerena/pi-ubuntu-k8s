@@ -58,6 +58,15 @@
       "destination": "/tmp/pi-image-key.pub"
     },
     {
+      "type": "file",
+      "source": "sshd_config",
+      "destination": "/tmp/sshd_config"
+    },
+    {
+      "type": "shell",
+      "script": "test-and-update-sshd.sh"
+    },
+    {
       "type": "ansible-local",
       "playbook_file": "./k8s-image.yaml"
     },

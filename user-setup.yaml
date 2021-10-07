@@ -16,6 +16,7 @@
     - name: add my user
       user:
         name: kat
+        password_lock: yes
         comment: serena's user on pi
         append: yes
         shell: /usr/bin/zsh
@@ -26,3 +27,12 @@
         user: kat
         state: present
         key: "{{ lookup('file', '/tmp/pi-image-key.pub') }}"
+    - name: add my user
+      user:
+        name: kat-serial
+        comment: serena's user on pi (only uses serial connection)
+        password: "CaTxtGR/2oAFQ"
+        append: yes
+        shell: /usr/bin/zsh
+        groups:
+          - katadmin
